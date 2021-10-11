@@ -3,8 +3,8 @@
 Demo for AWS StepFunctions deployed through CDK
 
 ## Prerequisites
+* Python 3.9+ . [Installing through pyenv](https://github.com/pyenv/pyenv) is recommended
 * [Poetry](https://python-poetry.org/docs/master/#installation)
-* Python 3.9. [Installing through pyenv](https://github.com/pyenv/pyenv) is recommended
 * [NodeJs](https://nodejs.org/en/)
 * [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/cli.html)
 * [Docker](https://docs.docker.com/get-docker/)
