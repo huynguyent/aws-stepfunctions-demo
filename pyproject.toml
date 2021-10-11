@@ -6,11 +6,25 @@ authors = ["Huy Nguyen  <huy.ngtuan@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+"aws-cdk.core" = "^1.127.0"
+"aws-cdk.aws-lambda" = "^1.127.0"
+"aws-cdk.aws-stepfunctions" = "^1.127.0"
+"aws-cdk.aws-logs" = "^1.127.0"
+"aws-cdk.aws-stepfunctions-tasks" = "^1.127.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
 mypy = "^0.910"
 isort = "^5.9.3"
+
+[tool.mypy]
+disallow_untyped_defs = true
+no_implicit_optional = true
+pretty = true
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
