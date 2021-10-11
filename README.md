@@ -28,10 +28,10 @@ make docker-test
 ### Deploy
 Deploy in local machine 
 ```bash
-make test
+make deploy
 ```
 
 Deploy test in Docker
 ```bash
-make docker-test
+make docker-deploy
 ```
