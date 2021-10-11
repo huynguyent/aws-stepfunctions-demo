@@ -18,6 +18,9 @@ format:
 	poetry run black .
 	poetry run isort .
 
+init:
+	poetry install
+
 test:
 	poetry run black --check .
 	poetry run isort --check-only .
