@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "aws-stepfunctions-demo"
+version = "0.1.0"
+description = "Demo for AWS StepFunctions deployed through CDK"
+authors = ["Huy Nguyen  <huy.ngtuan@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+mypy = "^0.910"
+isort = "^5.9.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
