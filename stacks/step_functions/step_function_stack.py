@@ -5,7 +5,7 @@ import aws_cdk.aws_logs as aws_logs
 import aws_cdk.aws_stepfunctions as sfn
 from aws_cdk import core as cdk
 
-from . import policies
+from . import lambdas, policies
 from .state_machine_definition import create_state_machine
 
 
@@ -32,6 +32,8 @@ class StepFunctionsStack(cdk.Stack):
             ],
         )
 
+        lambdas_functions = lambdas.create_functions(self)
+
         example_state_machine = sfn.StateMachine(
             scope=self,
             id="example-state-machine",
@@ -41,7 +43,7 @@ class StepFunctionsStack(cdk.Stack):
                 destination=stepfunctions_log_group,
                 level=sfn.LogLevel.ALL,
             ),
-            definition=create_state_machine(self),
+            definition=create_state_machine(self, lambdas_functions),
         )
 
         example_state_machine.node.add_dependency(state_machine_role)
