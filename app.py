@@ -1,6 +1,6 @@
 from aws_cdk import core as cdk
 
-from stacks.step_function_stack import StepFunctionsStack
+from stacks.step_functions.step_function_stack import StepFunctionsStack
 
 app = cdk.App()
 StepFunctionsStack(
