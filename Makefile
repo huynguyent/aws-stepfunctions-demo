@@ -9,6 +9,7 @@ else
 endif
 
 DOCKER=docker run --user root -it --rm $(DOCKER_AWS_OPTS) \
+	-v "$(PWD)":/workdir \
 	-w /workdir \
 	-e AWS_DEFAULT_REGION=ap-southeast-2 \
 	$(DOCKER_IMAGE_NAME)
@@ -29,7 +30,7 @@ test:
 	poetry run mypy $(python_dirs)
 
 docker-test: docker-build
-	$(DEPLOY_DOCKER) bash -euo pipefail -c 'make test'
+	$(DOCKER) bash -euo pipefail -c 'make test'
 
 deploy:
 # https://github.com/aws/aws-cdk/issues/14658
@@ -37,4 +38,4 @@ deploy:
 	NPM_CONFIG_UNSAFE_PERM=true npx cdk deploy --all --require-approval never
 
 docker-deploy: docker-build
-	$(DEPLOY_DOCKER) bash -euo pipefail -c 'make deploy'
+	$(DOCKER) bash -euo pipefail -c 'make deploy'
