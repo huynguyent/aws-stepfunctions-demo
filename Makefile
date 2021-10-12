@@ -1,6 +1,6 @@
 DOCKER_IMAGE_NAME = aws-stepfunctions-demo
 
-python_dirs = functions stacks app.py
+python_dirs = functions stack app.py
 
 ifneq ($(wildcard ~/.aws),)
 	DOCKER_AWS_OPTS=-v $(HOME)/.aws:/root/.aws

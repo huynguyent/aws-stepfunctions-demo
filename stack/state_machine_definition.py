@@ -2,7 +2,7 @@ import aws_cdk.aws_stepfunctions as sfn
 import aws_cdk.aws_stepfunctions_tasks as tasks
 import constructs
 
-from stacks.lambdas import LambdaFunctions
+from .lambdas import LambdaFunctions
 
 
 def create_state_machine(
