@@ -31,7 +31,7 @@ Deploy in local machine
 make deploy
 ```
 
-Deploy test in Docker
+Deploy in Docker
 ```bash
 make docker-deploy
 ```
