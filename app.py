@@ -8,11 +8,11 @@ lambdas_stack = LambdasStack(
     scope=app,
     construct_id="ExampleLambdas",
 )
-step_function_stack = StepFunctionsStack(
+step_functions_stack = StepFunctionsStack(
     scope=app,
     construct_id="StepFunctionsDemo",
 )
 
-step_function_stack.add_dependency(lambdas_stack)
+step_functions_stack.add_dependency(lambdas_stack)
 
 app.synth()
