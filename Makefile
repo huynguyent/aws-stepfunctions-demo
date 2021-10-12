@@ -1,5 +1,7 @@
 DOCKER_IMAGE_NAME = aws-stepfunctions-demo
 
+python_dirs = functions stacks app.py
+
 ifneq ($(wildcard ~/.aws),)
 	DOCKER_AWS_OPTS=-v $(HOME)/.aws:/root/.aws
 else
@@ -15,16 +17,16 @@ docker-build:
 	docker build --tag $(DOCKER_IMAGE_NAME) .
 
 format:
-	poetry run black .
-	poetry run isort .
+	poetry run black $(python_dirs)
+	poetry run isort $(python_dirs)
 
 init:
 	poetry install
 
 test:
-	poetry run black --check .
-	poetry run isort --check-only .
-	poetry run mypy .
+	poetry run black --check $(python_dirs)
+	poetry run isort --check-only $(python_dirs)
+	poetry run mypy $(python_dirs)
 
 docker-test: docker-build
 	$(DEPLOY_DOCKER) bash -euo pipefail -c 'make test'
