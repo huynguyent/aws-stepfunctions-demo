@@ -48,3 +48,5 @@ class StepFunctionsStack(cdk.Stack):
 
         example_state_machine.node.add_dependency(state_machine_role)
         example_state_machine.node.add_dependency(stepfunctions_log_group)
+        for lambdas_function in lambdas_functions.__dict__.values():
+            example_state_machine.node.add_dependency(lambdas_function)
