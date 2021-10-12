@@ -5,7 +5,7 @@ import aws_cdk.aws_logs as aws_logs
 import aws_cdk.aws_stepfunctions as sfn
 from aws_cdk import core as cdk
 
-from infra import policies
+from stacks import policies
 
 from .state_machine_definition import create_state_machine
 
