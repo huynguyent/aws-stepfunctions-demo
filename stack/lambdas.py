@@ -8,6 +8,9 @@ import constructs
 class LambdaFunctions:
     hello_world: lambda_.Function
 
+    def items(self) -> list[lambda_.Function]:
+        return list(self.__dict__.values())
+
 
 def create_functions(scope: constructs.Construct) -> LambdaFunctions:
     return LambdaFunctions(

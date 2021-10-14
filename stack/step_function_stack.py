@@ -13,6 +13,8 @@ class StepFunctionsStack(cdk.Stack):
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs: Any) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        lambda_functions = lambdas.create_functions(self)
+
         stepfunctions_log_group = aws_logs.LogGroup(
             scope=self,
             id="stepfunctions-log-group",
@@ -25,14 +27,17 @@ class StepFunctionsStack(cdk.Stack):
             role_name="ExampleStateMachineRole",
             assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
             managed_policies=[
-                policies.invoke_lambda(scope=self),
+                policies.invoke_lambda_functions(
+                    scope=self,
+                    function_arns=[
+                        function.function_arn for function in lambda_functions.items()
+                    ],
+                ),
                 policies.cloud_watch_log(
-                    scope=self, log_group_arn=stepfunctions_log_group.log_group_arn
+                    scope=self, log_group_arns=[stepfunctions_log_group.log_group_arn]
                 ),
             ],
         )
-
-        lambdas_functions = lambdas.create_functions(self)
 
         example_state_machine = sfn.StateMachine(
             scope=self,
@@ -43,10 +48,10 @@ class StepFunctionsStack(cdk.Stack):
                 destination=stepfunctions_log_group,
                 level=sfn.LogLevel.ALL,
             ),
-            definition=create_state_machine(self, lambdas_functions),
+            definition=create_state_machine(self, lambda_functions),
         )
 
         example_state_machine.node.add_dependency(state_machine_role)
         example_state_machine.node.add_dependency(stepfunctions_log_group)
-        for lambdas_function in lambdas_functions.__dict__.values():
-            example_state_machine.node.add_dependency(lambdas_function)
+        for function in lambda_functions.items():
+            example_state_machine.node.add_dependency(function)
