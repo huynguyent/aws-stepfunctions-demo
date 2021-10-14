@@ -2,7 +2,9 @@ import aws_cdk.aws_iam as iam
 import constructs
 
 
-def invoke_lambda(scope: constructs.Construct) -> iam.ManagedPolicy:
+def invoke_lambda_functions(
+    scope: constructs.Construct, function_arns: list[str]
+) -> iam.ManagedPolicy:
     return iam.ManagedPolicy(
         scope=scope,
         id="AllowLambdaInvoke",
@@ -10,7 +12,7 @@ def invoke_lambda(scope: constructs.Construct) -> iam.ManagedPolicy:
         document=iam.PolicyDocument(
             statements=[
                 iam.PolicyStatement(
-                    resources=["arn:aws:lambda:::function:*"],
+                    resources=function_arns,
                     effect=iam.Effect.ALLOW,
                     actions=["lambda:InvokeFunction"],
                 )
@@ -20,7 +22,7 @@ def invoke_lambda(scope: constructs.Construct) -> iam.ManagedPolicy:
 
 
 def cloud_watch_log(
-    scope: constructs.Construct, log_group_arn: str
+    scope: constructs.Construct, log_group_arns: list[str]
 ) -> iam.ManagedPolicy:
     return iam.ManagedPolicy(
         scope=scope,
@@ -29,7 +31,7 @@ def cloud_watch_log(
         document=iam.PolicyDocument(
             statements=[
                 iam.PolicyStatement(
-                    resources=[log_group_arn],
+                    resources=log_group_arns,
                     effect=iam.Effect.ALLOW,
                     actions=[
                         "logs:CreateLogDelivery",
