@@ -27,13 +27,13 @@ class StepFunctionsStack(cdk.Stack):
             role_name="ExampleStateMachineRole",
             assumed_by=iam.ServicePrincipal("states.amazonaws.com"),
             managed_policies=[
-                policies.invoke_lambda_functions(
+                policies.Lambda.invoke_functions(
                     scope=self,
                     function_arns=[
                         function.function_arn for function in lambda_functions.items()
                     ],
                 ),
-                policies.cloud_watch_log(
+                policies.CwLog.write_logs(
                     scope=self, log_group_arns=[stepfunctions_log_group.log_group_arn]
                 ),
             ],
