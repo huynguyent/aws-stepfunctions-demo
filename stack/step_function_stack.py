@@ -51,7 +51,6 @@ class StepFunctionsStack(cdk.Stack):
             definition=create_state_machine(self, lambda_functions),
         )
 
-        example_state_machine.node.add_dependency(state_machine_role)
-        example_state_machine.node.add_dependency(stepfunctions_log_group)
-        for function in lambda_functions.items():
-            example_state_machine.node.add_dependency(function)
+        example_state_machine.node.add_dependency(
+            *lambda_functions.items(), state_machine_role, stepfunctions_log_group
+        )
