@@ -1,5 +1,6 @@
 from typing import Any
 
+import aws_cdk.aws_dynamodb as dynamodb
 import aws_cdk.aws_iam as iam
 import aws_cdk.aws_logs as aws_logs
 import aws_cdk.aws_stepfunctions as sfn
@@ -14,6 +15,14 @@ class StepFunctionsStack(cdk.Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         lambda_functions = lambdas.create_functions(self)
+
+        job_data_table = dynamodb.Table(
+            scope=self,
+            id="JobDataTable",
+            partition_key=dynamodb.Attribute(
+                name="job_id", type=dynamodb.AttributeType.STRING
+            ),
+        )
 
         stepfunctions_log_group = aws_logs.LogGroup(
             scope=self,
@@ -36,6 +45,9 @@ class StepFunctionsStack(cdk.Stack):
                 policies.CwLog.write_logs(
                     scope=self, log_group_arns=[stepfunctions_log_group.log_group_arn]
                 ),
+                policies.DynamoDb.write_access(
+                    scope=self, table_arn=job_data_table.table_arn
+                ),
             ],
         )
 
@@ -48,9 +60,12 @@ class StepFunctionsStack(cdk.Stack):
                 destination=stepfunctions_log_group,
                 level=sfn.LogLevel.ALL,
             ),
-            definition=create_state_machine(self, lambda_functions),
+            definition=create_state_machine(
+                self, lambda_functions=lambda_functions, data_table=job_data_table
+            ),
         )
 
-        example_state_machine.node.add_dependency(
-            *lambda_functions.items(), state_machine_role, stepfunctions_log_group
+        state_machine_role.node.add_dependency(
+            *lambda_functions.items(), job_data_table, stepfunctions_log_group
         )
+        example_state_machine.node.add_dependency(state_machine_role)
