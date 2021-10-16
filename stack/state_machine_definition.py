@@ -9,5 +9,12 @@ def create_state_machine(
     scope: constructs.Construct, lambda_functions: LambdaFunctions
 ) -> sfn.IChainable:
     return tasks.LambdaInvoke(
-        scope=scope, id="CleanTextStep", lambda_function=lambda_functions.clean_text
-    ).next(sfn.Pass(scope=scope, id="test_task"))
+        scope=scope,
+        id="CleanTextStep",
+        lambda_function=lambda_functions.clean_text,
+        payload=sfn.TaskInput.from_object({"html_text.$": "$.html_text"}),
+        result_selector={
+            "result.$": "$.Payload"
+        },
+        result_path="$.CleanText"
+    )
