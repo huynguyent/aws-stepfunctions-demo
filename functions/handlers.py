@@ -1,4 +1,4 @@
-from . import html_cleaner
+import html_cleaner
 
 
 def hello(event: dict, context: dict) -> dict:
