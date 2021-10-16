@@ -23,16 +23,16 @@ def create_state_machine(
         lambda_function=lambda_functions.create_embedding,
         payload=sfn.TaskInput.from_object({"cleaned_text.$": "$.CleanText.result"}),
         result_selector={"result.$": "$.Payload"},
-        result_path="$.CreateEmbedding",
+        result_path="$.embedding",
     )
 
     predict_salary_step = tasks.LambdaInvoke(
         scope=scope,
         id="PredictSalaryStep",
         lambda_function=lambda_functions.predict_salary,
-        payload=sfn.TaskInput.from_object({"embedding.$": "$.CreateEmbedding.result"}),
+        payload=sfn.TaskInput.from_object({"embedding.$": "$.embedding.result"}),
         result_selector={"result.$": "$.Payload"},
-        result_path="$.PredictSalary",
+        result_path="$.predicted_salary",
     )
 
     return clean_text_step.next(create_embedding_step).next(predict_salary_step)
