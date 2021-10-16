@@ -1,6 +1,8 @@
 # AWS StepFunctions Demo
 
-Demo for AWS StepFunctions deployed through CDK
+A simple enrichment pipeline based on AWS StepFunctions and deployed through CDK
+
+![design](assets/design.png)
 
 ## Prerequisites
 * Python 3.9+ . [Installing through pyenv](https://github.com/pyenv/pyenv) is recommended
