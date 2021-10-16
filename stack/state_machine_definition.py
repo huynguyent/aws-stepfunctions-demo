@@ -14,14 +14,14 @@ def create_state_machine(
         lambda_function=lambda_functions.clean_text,
         payload=sfn.TaskInput.from_object({"html_text.$": "$.html_text"}),
         result_selector={"result.$": "$.Payload"},
-        result_path="$.CleanText",
+        result_path="$.cleaned_text",
     )
 
     create_embedding_step = tasks.LambdaInvoke(
         scope=scope,
         id="CreateEmbeddingStep",
         lambda_function=lambda_functions.create_embedding,
-        payload=sfn.TaskInput.from_object({"cleaned_text.$": "$.CleanText.result"}),
+        payload=sfn.TaskInput.from_object({"cleaned_text.$": "$.cleaned_text.result"}),
         result_selector={"result.$": "$.Payload"},
         result_path="$.embedding",
     )
