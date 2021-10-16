@@ -14,6 +14,8 @@ DOCKER=docker run --user root -it --rm $(DOCKER_AWS_OPTS) \
 	-e AWS_DEFAULT_REGION=ap-southeast-2 \
 	$(DOCKER_IMAGE_NAME)
 
+.PHONY: test
+
 docker-build:
 	docker build --tag $(DOCKER_IMAGE_NAME) .
 
@@ -28,6 +30,7 @@ test:
 	poetry run black --check $(python_dirs)
 	poetry run isort --check-only $(python_dirs)
 	poetry run mypy $(python_dirs)
+	poetry run pytest test
 
 docker-test: docker-build
 	$(DOCKER) bash -euo pipefail -c 'make test'
