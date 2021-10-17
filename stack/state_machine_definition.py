@@ -1,3 +1,4 @@
+import aws_cdk.aws_dynamodb as dynamodb
 import aws_cdk.aws_stepfunctions as sfn
 import aws_cdk.aws_stepfunctions_tasks as tasks
 import constructs
@@ -6,7 +7,9 @@ from .lambdas import LambdaFunctions
 
 
 def create_state_machine(
-    scope: constructs.Construct, lambda_functions: LambdaFunctions
+    scope: constructs.Construct,
+    lambda_functions: LambdaFunctions,
+    data_table: dynamodb.Table,
 ) -> sfn.IChainable:
     clean_text_step = tasks.LambdaInvoke(
         scope=scope,
@@ -35,4 +38,25 @@ def create_state_machine(
         result_path="$.predicted_salary",
     )
 
-    return clean_text_step.next(create_embedding_step).next(predict_salary_step)
+    store_job_data_step = tasks.DynamoPutItem(
+        scope=scope,
+        id="StoreJobData",
+        table=data_table,
+        item={
+            "job_id": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.job_id")
+            ),
+            "html_text": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.html_text")
+            ),
+            "cleaned_text": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.cleaned_text.result")
+            ),
+        },
+    )
+
+    return (
+        clean_text_step.next(create_embedding_step)
+        .next(predict_salary_step)
+        .next(store_job_data_step)
+    )

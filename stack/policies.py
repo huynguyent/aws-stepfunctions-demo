@@ -46,3 +46,25 @@ class CwLog:
                 ]
             ),
         )
+
+
+class DynamoDb:
+    @staticmethod
+    def write_access(scope: constructs.Construct, table_arn: str) -> iam.ManagedPolicy:
+        return iam.ManagedPolicy(
+            scope=scope,
+            id="DynamoDbWriteAccess",
+            managed_policy_name="DynamoDbWriteAccess",
+            document=iam.PolicyDocument(
+                statements=[
+                    iam.PolicyStatement(
+                        resources=[table_arn],
+                        effect=iam.Effect.ALLOW,
+                        actions=[
+                            "dynamodb:PutItem",
+                            "dynamodb:UpdateItem",
+                        ],
+                    )
+                ]
+            ),
+        )
