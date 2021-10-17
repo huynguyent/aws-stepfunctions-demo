@@ -18,6 +18,7 @@ class StepFunctionsStack(cdk.Stack):
 
         job_data_table = dynamodb.Table(
             scope=self,
+            table_name="JobDataTable",
             id="JobDataTable",
             partition_key=dynamodb.Attribute(
                 name="job_id", type=dynamodb.AttributeType.STRING

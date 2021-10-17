@@ -42,7 +42,17 @@ def create_state_machine(
         scope=scope,
         id="StoreJobData",
         table=data_table,
-        item={"$.": tasks.DynamoAttributeValue.map_from_json_path("$")},
+        item={
+            "job_id": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.job_id")
+            ),
+            "html_text": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.html_text")
+            ),
+            "cleaned_text": tasks.DynamoAttributeValue.from_string(
+                sfn.JsonPath.string_at("$.cleaned_text.result")
+            ),
+        },
     )
 
     return (
